@@ -42,7 +42,8 @@ data/
 *.dat
 
 # ---------------------------------------------------------------- generated test reports（CI 上传 artifact，不入库）
-phase*-junit*.xml
+# 覆盖 backend/frontend/根目录的一切 junit 报告（含 frontend-junit.xml）
+*-junit.xml
 _it.xml
 _u.xml
 _full.xml

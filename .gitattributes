@@ -1,0 +1,15 @@
+# ============================================================
+# 行尾 / 二进制归一化 —— 保证跨平台 checkout 后文件字节一致。
+#
+# 为什么必须有：config/prompts/*.j2 与 config/*.yaml 的**文件内容**直接参与
+# ruleset_version / scoring_version / prompt_version 的哈希（ADR-019），
+# 而这两个版本号又是 analysis 与 profile artifact 的身份组成部分。
+# 若 CRLF/LF 随平台变化，同一份输入会算出不同的身份 —— 违反
+# "相同输入 → 相同输出/身份可复现"。
+# ============================================================
+
+* text=auto eol=lf
+
+# 明确二进制：禁止任何行尾转换与 diff 文本化
+*.png binary
+*.ico binary
