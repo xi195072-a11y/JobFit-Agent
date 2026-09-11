@@ -36,6 +36,9 @@ frontend/test-results/
 data/
 .tools/
 
+# ---------------------------------------------------------------- editor / agent workspace config（不入库）
+.trae/
+
 # ---------------------------------------------------------------- logs / local state
 *.log
 .jobfit_phase*_state.json
