@@ -1,0 +1,17 @@
+version: "0.1.0"
+# 硬条件算子的显式解析规则（Phase 3 §11/§12）。
+# 目的：抽取层对某些要求可能给出 operator="unspecified"（例如 JD 只写"工作地点：深圳"）。
+# 该类情形一律【按本文件声明的默认算子解析】，不在代码里隐式决定；未声明的 req_type 视为不支持。
+# 受支持算子集合：不属于该集合（含无法解析）=> UNKNOWN + UNSUPPORTED_OPERATOR，并记录 architecture gap。
+operators:
+  degree:            {default: ">=", allowed: [">=", "=="]}
+  years_experience:  {default: ">=", allowed: [">="]}
+  skill:             {default: "has", allowed: ["has"]}
+  location:          {default: "in", allowed: ["in"]}
+  language:          {default: ">=", allowed: [">="]}
+  certification:     {default: "has", allowed: ["has"]}
+# 当前 schema 无法确定性判定、且抽取层未建模的要求类型：
+# 一律 UNKNOWN（绝不交给 LLM 猜测），并在 runtime warning 中记录 architecture gap。
+unsupported:
+  - security_clearance
+  - other

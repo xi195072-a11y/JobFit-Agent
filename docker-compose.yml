@@ -1,0 +1,81 @@
+# JobFit Agent — 全栈容器编排（Phase 5 §37 / Phase 6 §5）。
+#
+#   docker compose up --build
+#     -> db (pgvector) + backend (FastAPI, 启动即幂等 migrate) + frontend (Next.js)
+#
+# 说明：
+# - 与 backend/docker-compose.yml（仅 db 的本地开发辅助）并存；本文件是完整栈。
+# - 若用 backend/docker-compose.yml 起过 db，先 `docker compose -f backend/docker-compose.yml down`
+#   再跑本文件（同为 container_name=jobfit-pg，会重名）。**不要加 -v**，数据卷会被复用。
+# - 数据卷显式指向既有卷名 backend_jobfit_pgdata：本机已有开发数据不会被丢弃/重建。
+# - DEEPSEEK_API_KEY 未配置时后端仍可运行：critique 落 `unavailable`
+#   （EXTERNAL CREDENTIAL BLOCKED），绝不伪造 live 结果（ADR-021）。
+name: jobfit
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: jobfit-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jobfit
+      POSTGRES_PASSWORD: jobfit
+      POSTGRES_DB: jobfit
+    ports:
+      - "5432:5432"
+    volumes:
+      - jobfit_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobfit -d jobfit"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  backend:
+    build:
+      context: ./backend
+    image: ai-backend:latest
+    container_name: jobfit-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: postgresql+psycopg://jobfit:jobfit@db:5432/jobfit
+      PIPELINE_VERSION: docker
+      CONFIG_DIR: /app/config
+      STORAGE_DIR: /app/data/uploads
+      CORS_ALLOW_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      # 需要 live DeepSeek 时再注入（默认不配置 => critique unavailable，不伪造）
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # 浏览器侧访问地址（构建期内联），按需改成对外域名
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+        # npm registry 可覆盖（默认 npmmirror）
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+    image: ai-frontend:latest
+    container_name: jobfit-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "3000:3000"
+
+volumes:
+  # 显式命名：复用既有开发数据卷，避免 `compose up` 时创建空卷造成"数据丢失"错觉。
+  jobfit_pgdata:
+    name: backend_jobfit_pgdata

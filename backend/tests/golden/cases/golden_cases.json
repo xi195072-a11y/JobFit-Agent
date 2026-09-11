@@ -1,0 +1,147 @@
+[
+  {
+    "name": "perfect_match",
+    "description": "全部硬条件 MET；citation 合法；报告含 critique 派生分区；review approve 后 finalized。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "skill_match_agreement",
+      "citation_validity",
+      "report_invariant_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_match.txt",
+    "jd_fixture": "jd_match.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_MATCH_PAYLOAD"
+  },
+  {
+    "name": "obvious_mismatch",
+    "description": "学历/年限/地点均不满足；缺失证据保持 UNKNOWN，绝不写成 FALSE。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "skill_match_agreement",
+      "unknown_preservation",
+      "citation_validity",
+      "report_invariant_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_mismatch.txt",
+    "jd_fixture": "jd_mismatch.txt",
+    "resume_payload": "RESUME_MISMATCH_PAYLOAD",
+    "jd_payload": "JD_MISMATCH_PAYLOAD"
+  },
+  {
+    "name": "unknown",
+    "description": "未建模的条件（签证）与无证据技能必须 UNKNOWN；报告 unknowns 完整保留。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "skill_match_agreement",
+      "unknown_preservation",
+      "citation_validity",
+      "report_invariant_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_mismatch.txt",
+    "jd_fixture": "jd_unknown.txt",
+    "resume_payload": "RESUME_MISMATCH_PAYLOAD",
+    "jd_payload": "JD_UNKNOWN_PAYLOAD"
+  },
+  {
+    "name": "mixed_constraints",
+    "description": "同一 analysis 内 MET 与 UNKNOWN 并存，gate=unknown。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "skill_match_agreement",
+      "unknown_preservation",
+      "citation_validity",
+      "report_invariant_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_match.txt",
+    "jd_fixture": "jd_unknown.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_UNKNOWN_PAYLOAD"
+  },
+  {
+    "name": "skill_partial_match",
+    "description": "技能仅在经历文本中出现（无结构化技能行）=> partial，不是 matched 也不是 missing。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "skill_match_agreement",
+      "unknown_preservation",
+      "citation_validity",
+      "report_invariant_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_mismatch.txt",
+    "jd_fixture": "jd_unknown.txt",
+    "resume_payload": "RESUME_MISMATCH_PAYLOAD",
+    "jd_payload": "JD_UNKNOWN_PAYLOAD"
+  },
+  {
+    "name": "citation_failure",
+    "description": "LLM 引用不存在的 chunk（fabricated）=> citation validator 必须 rejected，正文不得进入报告。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "citation_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_match.txt",
+    "jd_fixture": "jd_match.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_MATCH_PAYLOAD"
+  },
+  {
+    "name": "cross_analysis_citation",
+    "description": "引用另一个 analysis 证据池的 chunk => 跨 analysis 引用必须 rejected（作用域隔离）。",
+    "metrics": ["hard_constraint_exact_agreement", "citation_validity"],
+    "resume_fixture": "resume_match.txt",
+    "jd_fixture": "jd_match.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_MATCH_PAYLOAD"
+  },
+  {
+    "name": "prompt_injection",
+    "description": "简历内嵌注入指令；确定性结论不受影响，被注入的 LLM 越权断言（UNKNOWN->SUPPORTED）必须 rejected。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "unknown_preservation",
+      "citation_validity"
+    ],
+    "resume_fixture": "resume_injection.txt",
+    "jd_fixture": "jd_unknown.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_UNKNOWN_PAYLOAD"
+  },
+  {
+    "name": "contradictory_evidence",
+    "description": "LLM 断言 NOT_MET 条件已满足（与确定性结论矛盾）=> 确定性表保持权威，绝不被改写。",
+    "metrics": [
+      "hard_constraint_exact_agreement",
+      "citation_validity",
+      "decision_trace_completeness"
+    ],
+    "resume_fixture": "resume_mismatch.txt",
+    "jd_fixture": "jd_mismatch.txt",
+    "resume_payload": "RESUME_MISMATCH_PAYLOAD",
+    "jd_payload": "JD_MISMATCH_PAYLOAD"
+  },
+  {
+    "name": "review_approval",
+    "description": "awaiting_review --approve--> finalized；报告 validated->final 且写 published_at。",
+    "metrics": ["citation_validity", "report_invariant_validity", "review_lifecycle"],
+    "resume_fixture": "resume_match.txt",
+    "jd_fixture": "jd_match.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_MATCH_PAYLOAD"
+  },
+  {
+    "name": "review_rejection",
+    "description": "awaiting_review --reject--> rejected；必须给出理由，审计留痕，报告不发布为 final。",
+    "metrics": ["citation_validity", "report_invariant_validity", "review_lifecycle"],
+    "resume_fixture": "resume_match.txt",
+    "jd_fixture": "jd_match.txt",
+    "resume_payload": "RESUME_MATCH_PAYLOAD",
+    "jd_payload": "JD_MATCH_PAYLOAD"
+  }
+]

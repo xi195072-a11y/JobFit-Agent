@@ -1,0 +1,18 @@
+张三
+电话: 13800138000
+邮箱: zhangsan@example.com
+
+教育经历
+2018-09 - 2022-06  南京大学  计算机科学与技术  本科  绩点 3.7
+荣誉: 校级一等奖学金
+
+工作经历
+2022-07 - 2024-12  腾讯科技（深圳）  后端开发工程师
+- 使用 Python 与 FastAPI 开发推荐服务接口
+- 负责 PostgreSQL 数据建模与查询优化
+
+技能
+Python, FastAPI, PostgreSQL, Docker
+Python 熟练
+语言
+英语 CET-6

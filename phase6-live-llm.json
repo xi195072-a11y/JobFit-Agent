@@ -1,0 +1,30 @@
+{
+  "schema_version": "phase6-live-llm.v1",
+  "generated_at": "2026-09-11T07:48:00Z",
+  "status": "EXTERNAL_CREDENTIAL_BLOCKED",
+  "reason": "DEEPSEEK_API_KEY 未在 process env / backend/.env 中配置",
+  "provider": "deepseek",
+  "model": "deepseek-chat",
+  "live_calls_executed": 0,
+  "checks": {
+    "real_provider_http": false,
+    "structured_output": false,
+    "citation_validation": false,
+    "report_validation": false,
+    "pii_logging": "not_executed"
+  },
+  "deterministic_substitute": {
+    "provider": "test-only DeterministicProvider (tests/support.py)",
+    "scope": "全部 critique/citation/report/review 契约与校验路径",
+    "evidence": [
+      "backend: test_phase4_critique.py (8 tests) 覆盖 validated / fabricated / cross-analysis / UNKNOWN 越权 / unavailable / lease-lost",
+      "backend: test_phase4_api.py::test_critique_endpoint_honours_injected_provider",
+      "golden: 11/11 cases（citation_validity 11/11）",
+      "e2e: 14 tests 打真实 backend（注入 DeterministicProvider）"
+    ]
+  },
+  "notes": [
+    "按 Phase 6 §8/§9：无凭证时不执行大规模 live evaluation，也绝不把 deterministic 结果写成 live PASS。",
+    "配置方式：在 backend/.env 或部署环境中设置 DEEPSEEK_API_KEY（不要提交到仓库）。"
+  ]
+}

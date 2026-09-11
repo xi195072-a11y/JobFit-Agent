@@ -1,0 +1,20 @@
+version: "0.1.0"
+# 检索参数（Phase 3 §15/§16）。检索会决定 evidence 的选择，因此必须版本化并随
+# analyses.config_snapshot 快照，保证历史分析可复现（ADR-019 / reproducibility.md）。
+#
+# 精度策略（实测依据见 ADR-030）：
+#   在中文文本上，纯词面相似度与纯向量相似度都**无法**可靠区分"相关 / 不相关"
+#   （实测：相关查询 max_cos=0.20，不相关查询 max_cos=0.16，lexical 甚至出现
+#    不相关 > 相关）。因此检索采用 **确定性 anchor gate + 相似度排序**：
+#   - anchor gate：命中必须**字面包含**要求的关键词（技能名等distinctive term）；
+#   - 排序：向量路径用 pgvector 余弦距离，lexical 路径用词面打分；
+#   - absence：被 gate 排除 => 无证据 => UNKNOWN（绝不当作 FALSE）。
+vector:
+  # 余弦相似度下限（ANN 总返回 top-k，负相似度视为无证据）
+  min_similarity: 0.0
+lexical:
+  min_score: 0.0
+# 单次检索返回上限（API 亦受此约束）
+max_top_k: 50
+# 每个 requirement 的默认 top_k（用于 analysis 的 evidence 检索）
+default_top_k: 5

@@ -1,0 +1,27 @@
+{
+  "api": "http://127.0.0.1:8010",
+  "iterations": 10,
+  "health": {
+    "count": 10,
+    "p50_ms": 15.9,
+    "p95_ms": 75.71,
+    "max_ms": 75.71
+  },
+  "analyses_list": {
+    "count": 10,
+    "p50_ms": 32.38,
+    "p95_ms": 50.41,
+    "max_ms": 50.41
+  },
+  "deterministic_path_ms": 290.7,
+  "deterministic_path_status": 200,
+  "upload_and_create_ms": 171.67,
+  "critique_and_report_ms": 154.08,
+  "critique_status": 200,
+  "frontend_initial_page": {
+    "count": 5,
+    "p50_ms": 17.98,
+    "p95_ms": 31.06,
+    "max_ms": 31.06
+  }
+}

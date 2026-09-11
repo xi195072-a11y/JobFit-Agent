@@ -1,0 +1,38 @@
+version: "0.2.0"
+# 分项权重（architecture §9 / ADR-019）：权重属【配置】，不得硬编码在代码中。
+# hard_constraint_gate 是门禁（veto），不参与加权总分。
+sections:
+  hard_constraint_gate: {kind: veto}
+  skills:      {weight: 0.35}
+  experience:  {weight: 0.25}
+  education:   {weight: 0.15}
+  location:    {weight: 0.15}
+  language:    {weight: 0.10}
+flags:
+  # 仅"自称"证据（claimed_only）的折扣系数（architecture §3 / decision-trace.md）
+  claimed_only_penalty: 0.5
+# 单项得分映射（确定性、可枚举；不允许代码里出现魔法数）
+credits:
+  matched: 1.0
+  partial: 0.5
+  missing: 0.0
+# 总分 = scale * Σ(applied_weight_section * section_score) / Σ(applied_weight_section)
+scale: 100.0
+# UNKNOWN 语义（ADR-008 / Phase 3 §27）：UNKNOWN ≠ FALSE，必须由显式 ruleset 决定影响。
+# mode=exclude_and_renormalize：
+#   1) UNKNOWN 项【不】进入该 section 的分母（既不加分也不扣分）；
+#   2) 某 section 完全没有可判定项 => 记 not_applicable，并从加权总分中剔除，
+#      剩余 section 的权重重新归一化（避免"因为没写"而被扣分）。
+# 其它可选 mode（当前未启用，代码只实现本文件声明的 mode）：
+#   penalty  —— UNKNOWN 按 penalty_factor 折算
+#   block    —— 出现 UNKNOWN 即阻断推荐
+unknown_policy:
+  mode: exclude_and_renormalize
+  section_without_determinable_items: not_applicable
+  # 硬条件门禁出现 UNKNOWN 时是否阻断推荐（显式规定，非代码隐式决定）
+  gate_unknown_blocks_recommendation: false
+# 硬条件门禁判定（确定性）
+gate:
+  blocked_if_any_not_met: true
+  unknown_if_any_unknown: true
+  blocks_recommendation: ["blocked"]

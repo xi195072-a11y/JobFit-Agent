@@ -1,0 +1,206 @@
+{
+  "perfect_match": {
+    "deterministic": {
+      "gate": "pass",
+      "verdicts": ["MET"],
+      "skills": {"python": "matched", "postgresql": "matched"},
+      "constraint_count": 6
+    },
+    "critique": {
+      "mode": "valid",
+      "validation": "validated",
+      "citations_validated": true,
+      "derived_sections": true
+    },
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status",
+        "strengths", "gaps", "risks", "critique_unknowns"
+      ],
+      "forbidden_sections": []
+    },
+    "review": {"decision": "approve", "final_status": "finalized", "report_stage": "final"}
+  },
+  "obvious_mismatch": {
+    "deterministic": {
+      "gate": "blocked",
+      "verdicts": ["NOT_MET", "UNKNOWN"],
+      "skills": {"pytorch": "unknown"},
+      "constraint_count": 4
+    },
+    "critique": {"mode": "valid", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "strengths", "gaps", "risks"
+      ],
+      "forbidden_sections": []
+    },
+    "review": null
+  },
+  "unknown": {
+    "deterministic": {
+      "gate": "unknown",
+      "verdicts": ["UNKNOWN"],
+      "skills": {"kubernetes": "unknown", "redis": "partial"},
+      "constraint_count": 3
+    },
+    "critique": {"mode": "valid", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "critique_unknowns"
+      ],
+      "forbidden_sections": []
+    },
+    "review": null
+  },
+  "mixed_constraints": {
+    "deterministic": {
+      "gate": "unknown",
+      "verdicts": ["MET", "UNKNOWN"],
+      "skills": {"kubernetes": "unknown", "redis": "matched"},
+      "constraint_count": 3
+    },
+    "critique": {"mode": "valid", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "strengths", "critique_unknowns"
+      ],
+      "forbidden_sections": []
+    },
+    "review": null
+  },
+  "skill_partial_match": {
+    "deterministic": {
+      "gate": "unknown",
+      "verdicts": ["UNKNOWN"],
+      "skills": {"kubernetes": "unknown", "redis": "partial"},
+      "constraint_count": 3
+    },
+    "critique": {"mode": "valid", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "critique_unknowns"
+      ],
+      "forbidden_sections": []
+    },
+    "review": null
+  },
+  "citation_failure": {
+    "deterministic": {
+      "gate": "pass",
+      "verdicts": ["MET"],
+      "skills": {"python": "matched", "postgresql": "matched"},
+      "constraint_count": 6
+    },
+    "critique": {"mode": "fabricated", "validation": "rejected", "citations_validated": false, "derived_sections": false},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status"
+      ],
+      "forbidden_sections": ["strengths", "gaps", "risks", "critique_unknowns"]
+    },
+    "review": null
+  },
+  "cross_analysis_citation": {
+    "deterministic": {
+      "gate": "pass",
+      "verdicts": ["MET"],
+      "skills": {"python": "matched", "postgresql": "matched"},
+      "constraint_count": 6
+    },
+    "critique": {"mode": "cross_analysis", "validation": "rejected", "citations_validated": false, "derived_sections": false},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status"
+      ],
+      "forbidden_sections": ["strengths", "gaps", "risks", "critique_unknowns"]
+    },
+    "review": null
+  },
+  "prompt_injection": {
+    "deterministic": {
+      "gate": "unknown",
+      "verdicts": ["MET", "UNKNOWN"],
+      "skills": {"kubernetes": "unknown", "redis": "matched"},
+      "constraint_count": 3
+    },
+    "critique": {"mode": "unknown_override", "validation": "rejected", "citations_validated": false, "derived_sections": false},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status"
+      ],
+      "forbidden_sections": ["strengths", "gaps", "risks", "critique_unknowns"]
+    },
+    "review": null
+  },
+  "contradictory_evidence": {
+    "deterministic": {
+      "gate": "blocked",
+      "verdicts": ["NOT_MET", "UNKNOWN"],
+      "skills": {"pytorch": "unknown"},
+      "constraint_count": 4
+    },
+    "critique": {"mode": "contradicted", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "strengths"
+      ],
+      "forbidden_sections": []
+    },
+    "review": null
+  },
+  "review_approval": {
+    "deterministic": {
+      "gate": "pass",
+      "verdicts": ["MET"],
+      "skills": {"python": "matched", "postgresql": "matched"},
+      "constraint_count": 6
+    },
+    "critique": {"mode": "valid", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "strengths", "gaps", "risks", "critique_unknowns"
+      ],
+      "forbidden_sections": []
+    },
+    "review": {"decision": "approve", "final_status": "finalized", "report_stage": "final"}
+  },
+  "review_rejection": {
+    "deterministic": {
+      "gate": "pass",
+      "verdicts": ["MET"],
+      "skills": {"python": "matched", "postgresql": "matched"},
+      "constraint_count": 6
+    },
+    "critique": {"mode": "valid", "validation": "validated", "citations_validated": true, "derived_sections": true},
+    "report": {
+      "stage": "validated",
+      "required_sections": [
+        "summary", "hard_constraints", "skills", "evidence", "unknowns", "score",
+        "critique", "next_actions", "review_status", "strengths", "gaps", "risks", "critique_unknowns"
+      ],
+      "forbidden_sections": []
+    },
+    "review": {"decision": "reject", "final_status": "rejected", "report_stage": "validated"}
+  }
+}

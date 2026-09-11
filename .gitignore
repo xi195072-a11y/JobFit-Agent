@@ -1,0 +1,67 @@
+# ============================================================
+# JobFit Agent — 仓库卫生（Phase 6 §48/§49）
+# 策略：测试报告/日志/本地状态不入库（由 CI 作为 artifact 上传）；
+#       评测报告（evaluation json/md）与 docs/screenshots 作为发布证据保留。
+# ============================================================
+
+# ---------------------------------------------------------------- secrets / env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---------------------------------------------------------------- python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# ---------------------------------------------------------------- node
+node_modules/
+.next/
+out/
+npm-debug.log*
+frontend/.env.local
+frontend/playwright-report/
+frontend/test-results/
+
+# ---------------------------------------------------------------- runtime data
+data/
+.tools/
+
+# ---------------------------------------------------------------- logs / local state
+*.log
+.jobfit_phase*_state.json
+*.dat
+
+# ---------------------------------------------------------------- generated test reports（CI 上传 artifact，不入库）
+phase*-junit*.xml
+_it.xml
+_u.xml
+_full.xml
+tests/e2e/e2e-junit.xml
+tests/e2e/playwright-report/
+tests/e2e/test-results/
+tests/e2e/.golden_metrics.json
+backend/_it.xml
+backend/_u.xml
+pytest-*.txt
+_*.txt
+
+# ---------------------------------------------------------------- 发布证据（保留）
+!phase5-evaluation.json
+!phase5-evaluation.md
+!phase6-evaluation.json
+!phase6-evaluation.md
+!phase6-live-llm.json
+
+# ---------------------------------------------------------------- OS
+Thumbs.db
+Desktop.ini

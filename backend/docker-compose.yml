@@ -1,0 +1,21 @@
+﻿services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: jobfit-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jobfit
+      POSTGRES_PASSWORD: jobfit
+      POSTGRES_DB: jobfit
+    ports:
+      - "5432:5432"
+    volumes:
+      - jobfit_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobfit -d jobfit"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  jobfit_pgdata:

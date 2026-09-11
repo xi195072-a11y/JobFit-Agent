@@ -1,0 +1,271 @@
+{
+  "schema_version": "phase5-evaluation.v1",
+  "generated_at": "2026-09-11T07:21:28.011828Z",
+  "golden_dir": "D:\\ai\\backend\\tests\\golden",
+  "junit_xml": "C:\\Users\\xiao'xi\\AppData\\Local\\Temp\\jobfit-eval-qaww5237\\golden-junit.xml",
+  "metrics_source": "C:\\Users\\xiao'xi\\AppData\\Local\\Temp\\jobfit-eval-qaww5237\\golden-metrics.json",
+  "ran_pytest": true,
+  "total_cases": 11,
+  "passed": 11,
+  "failed": 0,
+  "junit_tests": 13,
+  "junit_failures": 0,
+  "junit_errors": 0,
+  "junit_skipped": 0,
+  "metrics": [
+    {
+      "name": "hard_constraint_exact_agreement",
+      "description": "gate / verdict 集合 / 约束条数与预期逐项一致",
+      "passed": 9,
+      "total": 9,
+      "rate": 1.0
+    },
+    {
+      "name": "skill_match_agreement",
+      "description": "技能匹配状态与预期逐项一致",
+      "passed": 5,
+      "total": 5,
+      "rate": 1.0
+    },
+    {
+      "name": "unknown_preservation",
+      "description": "UNKNOWN 完整保留（不写成 FALSE，也不被 LLM 改写）",
+      "passed": 5,
+      "total": 5,
+      "rate": 1.0
+    },
+    {
+      "name": "citation_validity",
+      "description": "citation 校验结论与预期一致（fabricated / 跨 analysis 一律 rejected）",
+      "passed": 11,
+      "total": 11,
+      "rate": 1.0
+    },
+    {
+      "name": "report_invariant_validity",
+      "description": "报告 stage 与分区不变量成立（含 final 不可变）",
+      "passed": 7,
+      "total": 7,
+      "rate": 1.0
+    },
+    {
+      "name": "decision_trace_completeness",
+      "description": "每条约束都有 trace_id，且 trace 链非空",
+      "passed": 7,
+      "total": 7,
+      "rate": 1.0
+    },
+    {
+      "name": "review_lifecycle",
+      "description": "HITL 状态机转移、终态与审计留痕正确",
+      "passed": 2,
+      "total": 2,
+      "rate": 1.0
+    }
+  ],
+  "cases": [
+    {
+      "name": "citation_failure",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "citation_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "citation_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "contradictory_evidence",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "citation_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "citation_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "cross_analysis_citation",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "citation_validity"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "citation_validity": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "mixed_constraints",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "obvious_mismatch",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "perfect_match",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "prompt_injection",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "unknown_preservation",
+        "citation_validity"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "review_approval",
+      "passed": true,
+      "declared_metrics": [
+        "citation_validity",
+        "report_invariant_validity",
+        "review_lifecycle"
+      ],
+      "metrics": {
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "review_lifecycle": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "review_rejection",
+      "passed": true,
+      "declared_metrics": [
+        "citation_validity",
+        "report_invariant_validity",
+        "review_lifecycle"
+      ],
+      "metrics": {
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "review_lifecycle": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "skill_partial_match",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    },
+    {
+      "name": "unknown",
+      "passed": true,
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "reasons": [],
+      "junit_status": "passed"
+    }
+  ],
+  "overall_passed": true
+}

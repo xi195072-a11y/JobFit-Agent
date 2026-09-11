@@ -1,0 +1,195 @@
+{
+  "cases": [
+    {
+      "name": "perfect_match",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "obvious_mismatch",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "unknown",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "mixed_constraints",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "skill_partial_match",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "skill_match_agreement",
+        "unknown_preservation",
+        "citation_validity",
+        "report_invariant_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "skill_match_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "citation_failure",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "citation_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "citation_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "cross_analysis_citation",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "citation_validity"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "citation_validity": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "prompt_injection",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "unknown_preservation",
+        "citation_validity"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "unknown_preservation": true,
+        "citation_validity": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "contradictory_evidence",
+      "declared_metrics": [
+        "hard_constraint_exact_agreement",
+        "citation_validity",
+        "decision_trace_completeness"
+      ],
+      "metrics": {
+        "hard_constraint_exact_agreement": true,
+        "citation_validity": true,
+        "decision_trace_completeness": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "review_approval",
+      "declared_metrics": [
+        "citation_validity",
+        "report_invariant_validity",
+        "review_lifecycle"
+      ],
+      "metrics": {
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "review_lifecycle": true
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "review_rejection",
+      "declared_metrics": [
+        "citation_validity",
+        "report_invariant_validity",
+        "review_lifecycle"
+      ],
+      "metrics": {
+        "citation_validity": true,
+        "report_invariant_validity": true,
+        "review_lifecycle": true
+      },
+      "passed": true,
+      "reasons": []
+    }
+  ]
+}

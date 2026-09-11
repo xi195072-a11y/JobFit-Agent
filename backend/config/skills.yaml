@@ -1,0 +1,38 @@
+version: "0.2.0"
+# 技能规范化词表（确定性、可版本化）。
+# 规则：
+#   1. 先做形式归一（大小写 / 空白 / 标点 / 全角），再做【显式别名】查表；
+#   2. 未在 aliases 中声明的近义关系一律不成立 —— 禁止引入未声明的大型模糊匹配，
+#      例如 Python 绝不映射到 PyTorch（Phase 3 §19/§36）；
+#   3. 查不到 canonical 的技能保持未归一（skill_norm=None），匹配退化为按形式归一比较，
+#      结果仍确定性、可解释。
+skills:
+  - python
+  - fastapi
+  - postgresql
+  - docker
+  - kubernetes
+  - sql
+  - redis
+  - kafka
+  - pytorch
+aliases:
+  python: ["python", "python3", "python 3", "python programming", "python 开发"]
+  fastapi: ["fastapi", "fast api", "fastapi 框架"]
+  postgresql: ["postgresql", "postgres", "postgres sql", "pg"]
+  docker: ["docker", "docker 容器", "容器化"]
+  kubernetes: ["kubernetes", "k8s"]
+  sql: ["sql", "结构化查询语言"]
+  redis: ["redis"]
+  kafka: ["kafka", "apache kafka"]
+  pytorch: ["pytorch", "torch"]
+categories:
+  python: language
+  sql: language
+  fastapi: framework
+  postgresql: database
+  redis: database
+  docker: devops
+  kubernetes: devops
+  kafka: middleware
+  pytorch: ml

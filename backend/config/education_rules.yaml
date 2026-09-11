@@ -1,0 +1,9 @@
+version: "0.1.0"
+degree_levels:
+  博士: 4
+  硕士: 3
+  本科: 2
+  大专: 1
+  高中: 0
+  UNKNOWN: null
+rules: []

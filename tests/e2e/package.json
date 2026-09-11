@@ -1,0 +1,15 @@
+{
+  "name": "jobfit-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JobFit Agent Phase 5 E2E（Playwright，打真实 backend，无外部依赖）",
+  "scripts": {
+    "test": "playwright test",
+    "test:junit": "playwright test --reporter=list,junit",
+    "screenshots": "playwright test --config=playwright.screenshots.config.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0"
+  }
+}
