@@ -14,6 +14,9 @@ from jobfit.core.errors import ConfigurationError
 
 RESUME_PROMPT = "extract_resume.j2"
 JD_PROMPT = "extract_jd.j2"
+# schema 校验失败时的纠错重试模板（ADR-001/ADR-018，`max_repair_retries`）。
+# 不参与 `combined_version()`：artifact identity 仍由两个抽取模板决定。
+REPAIR_PROMPT = "repair.j2"
 
 
 @dataclass(frozen=True)

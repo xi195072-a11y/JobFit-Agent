@@ -1,4 +1,4 @@
-﻿# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
+# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
 """DTO → 领域 artifact 构建单测：grounding 失败即丢弃 + warning，绝不补全/猜测。"""
 
 from __future__ import annotations

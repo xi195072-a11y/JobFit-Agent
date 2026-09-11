@@ -2,6 +2,14 @@
 
 本文件记录**阶段级**技术能力（非逐 commit 罗列）。版本号遵循 `pyproject.toml`（当前 `0.1.0`）。
 
+## [Unreleased] — live 验证暴露的缺口修复
+
+**修复**
+
+- **structured output repair retry**（ADR-001 / ADR-018 已规定"校验失败 → 带纠错提示重试 1 次"，但代码未实现）：新增 `backend/config/prompts/repair.j2`，抽取路径（resume / jd）在 schema 校验失败时按 `settings.max_repair_retries` 重试；**每次真实 provider 调用前仍先 `reserve_llm_attempt`**（重试同样消耗 attempt budget）。此前首次失败直接落 `failed:StructuredOutputError`（真实 DeepSeek 首次 `/run` 复现）。
+- **测试环境污染**：`db_settings` 显式置空 `DEEPSEEK_API_KEY`，避免本机 `.env` 配置真实 key 时"无凭证 → 503 / critique unavailable"集成测试变成真实外呼；`backend/.env` 中重复的 key 已移除（容器由根 `.env` 经 compose 注入）。
+- 清理 5 个测试文件行首 BOM（触发 `invalid-syntax`，同时打断 `ruff` 与 `mypy`）。
+
 ## [0.1.0] — Phase 6：Release Engineering / CI / 发布就绪
 
 **新增**

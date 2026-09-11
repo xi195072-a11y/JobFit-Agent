@@ -1,4 +1,4 @@
-﻿# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
+# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
 """grounding 单测：引用必须能在真实 chunk 文本中定位（ADR-007）。"""
 
 from __future__ import annotations

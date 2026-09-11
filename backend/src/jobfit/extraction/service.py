@@ -12,14 +12,15 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, TypeVar
 
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from jobfit.config.prompts import JD_PROMPT, RESUME_PROMPT, PromptRegistry
+from jobfit.config.prompts import JD_PROMPT, REPAIR_PROMPT, RESUME_PROMPT, PromptRegistry
 from jobfit.config.settings import Settings
-from jobfit.core.errors import ConfigurationError
+from jobfit.core.errors import ConfigurationError, StructuredOutputError
 from jobfit.core.schemas import JDProfile, ResumeProfile, strip_artifact_meta
 from jobfit.db import models
 from jobfit.db.repositories import analyses as analyses_repo
@@ -130,6 +131,92 @@ def _ensure_parsed(session: Session, settings: Settings, document: models.Docume
     return parse_document(session, settings, document)
 
 
+# --------------------------------------------------- attempt reservation + repair
+T = TypeVar("T", bound=BaseModel)
+
+
+def _reserve_attempt(
+    session: Session,
+    *,
+    analysis: models.Analysis,
+    claim_token: uuid.UUID | None,
+    max_llm_attempts: int,
+    phase: str,
+) -> int | None:
+    """真实 provider 调用前的原子预占（ADR-018）。
+
+    `claim_token is None` 表示离线/无 lease 场景（测试直调），此时不预占也不计数。
+    """
+    if claim_token is None:
+        return None
+    return analyses_repo.reserve_llm_attempt(
+        session,
+        analysis_id=analysis.id,
+        claim_token=claim_token,
+        max_llm_attempts=max_llm_attempts,
+        phase=phase,
+    )
+
+
+async def _complete_structured_with_repair(
+    session: Session,
+    settings: Settings,
+    *,
+    analysis: models.Analysis,
+    claim_token: uuid.UUID | None,
+    provider: LLMProvider,
+    max_llm_attempts: int,
+    registry: PromptRegistry,
+    prompt: str,
+    schema: type[T],
+    chunks_text: str,
+    phase: str,
+) -> tuple[T, int | None]:
+    """structured 抽取 + schema 校验失败后的 repair retry（ADR-001/ADR-002/ADR-018）。
+
+    - **每次**真实 provider 调用前都先 `reserve_llm_attempt`（预占不因 crash 回滚）；
+    - 重试上限 `settings.max_repair_retries`，重试 prompt 携带上一次的校验错误；
+    - 预算耗尽时 `ReservationFailed` 直接上抛（不吞掉预算错误）；
+    - 重试仍失败则抛最后一次 `StructuredOutputError`，由上层决定降级/失败语义。
+
+    返回 `(schema 实例, 产出该结果的 attempt_no)`。
+    """
+    attempt_no = _reserve_attempt(
+        session,
+        analysis=analysis,
+        claim_token=claim_token,
+        max_llm_attempts=max_llm_attempts,
+        phase=phase,
+    )
+    try:
+        return await provider.complete_structured(prompt, schema=schema), attempt_no
+    except StructuredOutputError as exc:
+        last_error = exc
+
+    for _ in range(settings.max_repair_retries):
+        attempt_no = _reserve_attempt(
+            session,
+            analysis=analysis,
+            claim_token=claim_token,
+            max_llm_attempts=max_llm_attempts,
+            phase=f"{phase}_repair",
+        )
+        repair_prompt = registry.get(REPAIR_PROMPT).render(
+            chunks=chunks_text, error=str(last_error)
+        )
+        _LOG.info(
+            "structured_repair_retry",
+            analysis_id=str(analysis.id),
+            phase=phase,
+            attempt_no=attempt_no,
+        )
+        try:
+            return await provider.complete_structured(repair_prompt, schema=schema), attempt_no
+        except StructuredOutputError as retry_exc:
+            last_error = retry_exc
+    raise last_error
+
+
 # ------------------------------------------------------------------ resume
 
 async def reuse_or_extract_resume(
@@ -187,19 +274,23 @@ async def reuse_or_extract_resume(
             warnings=list(domain.extraction_warnings),
         )
 
-    # 真实 provider 调用前：先原子预占并提交（reservation 不因 crash 回滚）
-    attempt_no: int | None = None
-    if claim_token is not None:
-        attempt_no = analyses_repo.reserve_llm_attempt(
-            session,
-            analysis_id=analysis.id,
-            claim_token=claim_token,
-            max_llm_attempts=max_llm_attempts,
-            phase="extract_resume",
-        )
+    # 真实 provider 调用前：先原子预占并提交（reservation 不因 crash 回滚）；
+    # 首次 structured output 校验失败时按 max_repair_retries 带纠错提示重试（ADR-018）。
     chunks_text, truncated = _chunks_for_prompt(chunks)
     prompt = registry.get(RESUME_PROMPT).render(chunks=chunks_text)
-    dto: LLMResumeProfile = await provider.complete_structured(prompt, schema=LLMResumeProfile)
+    dto, attempt_no = await _complete_structured_with_repair(
+        session,
+        settings,
+        analysis=analysis,
+        claim_token=claim_token,
+        provider=provider,
+        max_llm_attempts=max_llm_attempts,
+        registry=registry,
+        prompt=prompt,
+        schema=LLMResumeProfile,
+        chunks_text=chunks_text,
+        phase="extract_resume",
+    )
 
     build = build_resume_profile(
         dto=dto,
@@ -320,18 +411,22 @@ async def reuse_or_extract_jd(
             warnings=list(domain.extraction_warnings),
         )
 
-    attempt_no: int | None = None
-    if claim_token is not None:
-        attempt_no = analyses_repo.reserve_llm_attempt(
-            session,
-            analysis_id=analysis.id,
-            claim_token=claim_token,
-            max_llm_attempts=max_llm_attempts,
-            phase="extract_jd",
-        )
+    # 同上：先预占，再调用；校验失败走 repair retry（ADR-018）。
     chunks_text, truncated = _chunks_for_prompt(chunks)
     prompt = registry.get(JD_PROMPT).render(chunks=chunks_text)
-    dto: LLMJdProfile = await provider.complete_structured(prompt, schema=LLMJdProfile)
+    dto, attempt_no = await _complete_structured_with_repair(
+        session,
+        settings,
+        analysis=analysis,
+        claim_token=claim_token,
+        provider=provider,
+        max_llm_attempts=max_llm_attempts,
+        registry=registry,
+        prompt=prompt,
+        schema=LLMJdProfile,
+        chunks_text=chunks_text,
+        phase="extract_jd",
+    )
 
     build = build_jd_profile(
         dto=dto,

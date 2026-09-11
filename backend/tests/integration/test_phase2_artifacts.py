@@ -1,4 +1,4 @@
-﻿# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
+# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
 """integration: Phase 2 artifact 语义（不可变 / 幂等 / 并发 / grounding / UNKNOWN 持久化）。"""
 
 from __future__ import annotations

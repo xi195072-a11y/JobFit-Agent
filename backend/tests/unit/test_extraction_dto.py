@@ -1,4 +1,4 @@
-﻿# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
+# mypy: disable-error-code="arg-type,attr-defined,assignment,union-attr,index"
 """LLM DTO 单测：严格 schema、缺失即 None/[]（UNKNOWN 语义）、禁止额外字段。"""
 
 from __future__ import annotations

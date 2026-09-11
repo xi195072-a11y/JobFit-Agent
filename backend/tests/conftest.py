@@ -131,12 +131,17 @@ def db_settings(db_engine, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("DEEPSEEK_MODEL", "test-deterministic")
     monkeypatch.setenv("MAX_LLM_ATTEMPTS", "10")
     monkeypatch.setenv("LEASE_TTL_SECONDS", "120")
-    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    # 本机 .env 可能配置了真实 key（live 验证用）：显式置空。
+    # 否则 `get_settings()` 会读到它，让"无凭证 => 503 / unavailable"这类集成测试
+    # 变成真实外呼。环境变量优先于 .env，置空等价于 CI 的无密钥环境。
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "")
 
     from jobfit.config.settings import Settings, get_settings
 
     get_settings.cache_clear()
     settings = Settings()
+    assert settings.deepseek_api_key is not None
+    assert settings.deepseek_api_key.get_secret_value() == ""
     assert settings.storage_dir == tmp_path / "storage"
     return settings
 
