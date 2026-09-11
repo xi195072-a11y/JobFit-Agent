@@ -67,7 +67,8 @@ from support import (  # noqa: E402
 )
 
 _engine = create_engine(settings.database_url, pool_pre_ping=True)
-with _engine.connect() as _conn:
+# begin() 才会提交：connect() 块退出即回滚，CREATE EXTENSION 会变成静默空操作。
+with _engine.begin() as _conn:
     _conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
 Base.metadata.create_all(_engine)
 session_factory = sessionmaker(bind=_engine, expire_on_commit=False)

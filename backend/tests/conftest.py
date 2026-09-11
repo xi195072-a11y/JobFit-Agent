@@ -83,7 +83,9 @@ def db_engine():
 
     engine = create_engine(url, pool_pre_ping=True)
     try:
-        with engine.connect() as conn:
+        # 用 begin() 而非 connect()：SQLAlchemy 2.0 在 connect() 块退出时会回滚，
+        # 导致 CREATE EXTENSION 变成静默空操作，后续 create_all 才会报 "type vector does not exist"。
+        with engine.begin() as conn:
             conn.execute(text("SELECT 1"))
             conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         Base.metadata.create_all(engine)  # 测试态建表；生产走 Alembic migration
